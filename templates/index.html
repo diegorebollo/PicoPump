@@ -1,3 +1,4 @@
+{% args sensor_readout %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,8 +34,8 @@
           <img src="https://i.postimg.cc/9fcr6V3Q/pic.png" class="img-fluid mt-3 mx-auto d-block" alt="water pump">       
           <div class="w-auto p-3">
             <ul class="list-group">
-              <li class="list-group-item list-group-item-dark">Cras justo odio</li>
-              <li class="list-group-item list-group-item-dark">Dapibus ac facilisis in</li>
+              <li class="list-group-item list-group-item-dark">Water Sensor Read: {{ sensor_readout }}</li>
+              <li class="list-group-item list-group-item-dark"><form method="post"><button type="submit">Reley</button></form></li>
               <li class="list-group-item list-group-item-dark">Morbi leo risus</li>
               <li class="list-group-item list-group-item-dark">Porta ac consectetur ac</li>
             </ul>
