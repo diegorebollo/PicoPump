@@ -3,6 +3,7 @@ import utime
 import _thread
 import control
 import ntptime
+from date_to_file import get_last_record
 from mm_wlan import mm_wlan
 from microdot.microdot import Microdot, Response
 from microdot.microdot_utemplate import render_template
@@ -25,13 +26,10 @@ def index(request):
     status = control.RELAY_STATUS
     sensor_readout = control.water_sensor_readout()
     threshold = control.THRESHOLD
-    last_run_date = xd
+    last_run_date = get_last_record() 
     if request.method == 'POST':
         control.relay_on()
     return render_template('index.html', sensor_readout=sensor_readout, latest = last_run_date, threshold=threshold, status=status)
 
-time = utime.localtime()
-ftime = f'{time[0]}-{time[1]}-{time[2]} {time[3]}:{time[4]}:{time[5]}'
 
-print(ftime)
 app.run(port=80)
