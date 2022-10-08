@@ -1,0 +1,27 @@
+{% args session_status, msg %}
+{% include 'base_header.html' %}
+            <br>  
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>                            
+          <div class="w-auto p-3">
+            <div class="card text-bg-dark text-center mb-3 mx-auto d-block" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">Admin Panel</h5>
+                  <p class="text-muted">{{msg}}</p>
+                  <p class="card-text">
+                    <form action="" method="post">
+                        <p>
+                        <input class="form-control me-2" autofocus="autofocus" autocomplete=off placeholder="User" type="text" name="user">
+                        </p>                        
+                        <p>
+                        <input class="form-control me-2" autocomplete=off placeholder="Password" type="password" name="pwd">                        
+                        </p> 
+                        <p>
+                          <button class="btn btn-secondary" type="submit">Login</button>
+                        </p>
+
+                  </form>                  
+{% include 'base_footer.html' %}
