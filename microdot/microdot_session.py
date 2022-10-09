@@ -1,4 +1,4 @@
-import jwt
+from microdot import jwt
 
 secret_key = None
 

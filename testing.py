@@ -9,13 +9,24 @@ from microdot.microdot import Microdot, Response, redirect
 from microdot.microdot_utemplate import render_template
 from microdot.microdot_session import set_session_secret_key, with_session, update_session, delete_session
 
-# Run main funtion in core0
-core = _thread.start_new_thread(control.main, ())
+# Run main function in core0
+_thread.start_new_thread(control.main, ())
 
-mm_wlan.connect_to_network(secrets.WIFI_SSID, secrets.WIFI_PASSWORD)
+# Connect to WIFI
+try:
+    mm_wlan.connect_to_network(secrets.WIFI_SSID, secrets.WIFI_PASSWORD)
+except:    
+    utime.sleep(180)
+    mm_wlan.connect_to_network(secrets.WIFI_SSID, secrets.WIFI_PASSWORD)
+    
+# Set Time    
+try:
+    ntptime.settime()
+except:
+    utime.sleep(10)
+    ntptime.settime()
 
-ntptime.settime()
-
+# Web Server  
 app = Microdot()
 set_session_secret_key(secrets.SECRET_KEY)
 Response.default_content_type = 'text/html'
@@ -26,13 +37,13 @@ Response.default_content_type = 'text/html'
 def index(request, session):
     
     session_status = session.get('status')
-    status = control.RELAY_STATUS
-    sensor_readout = control.water_sensor_readout()
-    threshold = control.THRESHOLD
+    water_sensor_readout = control.water_sensor_readout()
     last_run_date = get_last_record()
-    
-    if session_status is not 'authorized':  
-        return render_template('home.html', session_status=session_status, sensor_readout=sensor_readout, latest = last_run_date, threshold=threshold, status=status)
+    realy_status = control.RELAY_STATUS
+    threshold = control.THRESHOLD
+        
+    if session_status is not 'authorized':
+        return render_template('home.html', session_status=session_status, water_sensor_readout=water_sensor_readout, last_run_date=last_run_date, threshold=threshold, realy_status=realy_status)
     else:
         if request.method == 'POST':        
             if request.form['relay'] == 'off':
@@ -40,9 +51,9 @@ def index(request, session):
                 return redirect('/')
             elif request.form['relay'] == 'on':
                 control.relay_on()
-                return redirect('/')
+                return redirect('/')             
         else:
-            return render_template('manage.html', session_status=session_status, sensor_readout=sensor_readout, latest = last_run_date, threshold=threshold, status=status)       
+            return render_template('manage.html', session_status=session_status, water_sensor_readout=water_sensor_readout, last_run_date=last_run_date, threshold=threshold, realy_status=realy_status)       
 
 @app.route('/login', methods=['GET', 'POST'])
 @with_session
@@ -64,4 +75,4 @@ def logout(request):
     delete_session(request)
     return redirect('/')
 
-app.run(port=80, debug=True)
+app.run(port=80)

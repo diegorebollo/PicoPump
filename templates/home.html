@@ -1,11 +1,19 @@
-{% args session_status, sensor_readout, latest, threshold, status %}
+{% args session_status, water_sensor_readout, last_run_date, threshold, realy_status %}
 {% include 'base_header.html' %}
           <img src="https://i.postimg.cc/9fcr6V3Q/pic.png" class="img-fluid mt-3 mx-auto d-block" alt="water pump">       
           <div class="w-auto p-3">
             <ul class="list-group">
-              <li class="list-group-item list-group-item-dark">Water Sensor Read: {{ sensor_readout }} (Threshold: {{ threshold }})</li>
-              <li class="list-group-item list-group-item-dark">Last time: {{ latest }}</li>
-              <li class="list-group-item list-group-item-dark">Status: {{ status }}</li>
+              <li class="list-group-item list-group-item-dark text-center">Current Status:              
+              {% if (realy_status) is False %}
+                  Not Running
+              {% elif (realy_status) is None %}
+                  None (main function not running)
+              {% else %}
+                  Running
+              {% endif %}
+              </li>
+              <li class="list-group-item list-group-item-dark text-center">Last Time Running: {{ last_run_date }}</li>
+              <li class="list-group-item list-group-item-dark text-center">Water Sensor Readout: {{ water_sensor_readout }} - (Threshold: {{ threshold }})</li>       
             </ul>
           </div>
 {% include 'base_footer.html' %}

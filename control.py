@@ -3,10 +3,10 @@ from date_to_file import save_date
 import utime 
 
 SENSOR = ADC(26)
-RELAY = Pin(2, Pin.OUT)
-SECONDS_PUMPING = 5 
-SECONDS_READOUT = 5
-THRESHOLD = 21400
+RELAY = Pin(7, Pin.OUT)
+SECONDS_PUMPING = 3 
+SECONDS_READOUT = 3
+THRESHOLD = 22600
 RELAY_STATUS = None
 
 def water_sensor_readout():
@@ -35,8 +35,8 @@ def relay_on():
 
 def main():      
     while True:
-        relay_off()
         print(water_sensor_readout())
+        relay_off()        
         if water_sensor_readout() < THRESHOLD:            
             relay_on()
             utime.sleep(SECONDS_PUMPING)            

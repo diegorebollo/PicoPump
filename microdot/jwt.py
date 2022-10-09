@@ -1,6 +1,6 @@
 import binascii
 import hashlib
-import hmac
+from microdot import hmac
 import json
 from time import time
 
