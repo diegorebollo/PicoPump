@@ -1,12 +1,22 @@
 from machine import ADC, Pin
-from date_to_file import save_date
+from date_to_file import save_date, read_file
 import utime 
 
+"""
 SENSOR = ADC(26)
 RELAY = Pin(7, Pin.OUT)
 SECONDS_PUMPING = 3 
 SECONDS_READOUT = 3
 THRESHOLD = 22600
+RELAY_STATUS = None
+"""
+vars_file = read_file('test.json')
+
+SENSOR = ADC(vars_file['sensor_pin'])
+RELAY = Pin(vars_file['relay_pin'], Pin.OUT)
+SECONDS_PUMPING = vars_file['seconds_pumping'] 
+SECONDS_READOUT = vars_file['seconds_readout'] 
+THRESHOLD = vars_file['threshold'] 
 RELAY_STATUS = None
 
 def water_sensor_readout():
@@ -22,7 +32,6 @@ def relay_off():
     RELAY_STATUS = False
     return "Relay Off"
     
-
 
 def relay_on():
     
