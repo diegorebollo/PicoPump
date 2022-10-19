@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-secrets.py
+
 just4test.py
 date_history.json
 website/

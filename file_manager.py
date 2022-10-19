@@ -1,3 +1,4 @@
+# File Manager & Get Date Function
 import ujson
 import datetime
 
@@ -27,7 +28,7 @@ def get_date():
     current_time = datetime.datetime.now(my_timezone)
     return current_time
 
-# Just keeps last (MAX_RECORDS) records
+# Just keeps last MAX_RECORDS records
 def save_date():    
     fdate = str(get_date()).split('+')[0]
     try:

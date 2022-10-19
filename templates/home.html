@@ -1,19 +1,95 @@
-{% args session_status, water_sensor_readout, last_run_date, threshold, realy_status %}
-{% include 'base_header.html' %}
-          <img src="https://i.postimg.cc/9fcr6V3Q/pic.png" class="img-fluid mt-3 mx-auto d-block" alt="water pump">       
-          <div class="w-auto p-3">
-            <ul class="list-group">
-              <li class="list-group-item list-group-item-dark text-center">Current Status:              
-              {% if (realy_status) is False %}
-                  Not Running
-              {% elif (realy_status) is None %}
-                  None (main function not running)
-              {% else %}
-                  Running
-              {% endif %}
-              </li>
-              <li class="list-group-item list-group-item-dark text-center">Last Time Running: {{ last_run_date }}</li>
-              <li class="list-group-item list-group-item-dark text-center">Water Sensor Readout: {{ water_sensor_readout }} - (Threshold: {{ threshold }})</li>       
-            </ul>
-          </div>
-{% include 'base_footer.html' %}
+{% args vars_file, session_status, water_sensor_readout, last_run_date, threshold, realy_status %}
+{% include 'header.html' %}   
+   <!-- Main -->
+    <main class="container main-container">
+        <figure>
+          <img src="https://static.drebollo.dev/PicoPump/css/img.png" alt="Water Pump" />
+        </figure>
+        <article>
+          <table>
+            <tbody>
+              <tr>
+                <td>Status:</td>
+                <td>
+                {% if (realy_status) is False %}
+                    Not Running
+                {% elif (realy_status) is None %}
+                    None (main function not running)
+                {% else %}
+                    Running
+                {% endif %}
+            </td>
+              </tr>
+              <tr>
+                <td>Last Time Running:</td>
+                <td>{{ last_run_date }}</td>
+              </tr>
+              <tr>
+                <td>Water Sensor Readout:</td>
+                <td>{{ water_sensor_readout }} - (Threshold: {{ threshold }})</td>
+              </tr>
+              {% if (session_status) is 'authorized' %}
+              <tr>
+                <td>
+                  <a href="/relayon" class="btn">Relay ON</a>
+                </td>
+                <td>
+                  <a href="/relayoff" class="btn">Relay OFF</a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Seconds Readout:              
+                </td>
+                <td>
+                  {{vars_file['seconds_readout']}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Seconds Pumping:
+                </td>
+                <td>
+                  {{vars_file['seconds_pumping']}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Relay Pin:
+                </td>
+                <td>
+                  {{vars_file['relay_pin']}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Sensor Pin:
+                </td>
+                <td>
+                  {{vars_file['sensor_pin']}}
+                </td>
+              </tr>
+              </tbody>
+              </table>
+              <div class="squash">
+                <p>Parameters:</p>
+                <form method="post">               
+                    <select name="var_name">
+                    {% for key in (vars_file) %}
+                        <option value={{key}}>
+                        {{key}}
+                        </option>
+                    {% endfor %}
+                    </select>
+                    <p><label for="new_value">New Value:</label></p>
+                    <p><input type="number" id="new_value" name="new_value" autocomplete="off" required size="3"></p>
+                  <input type="submit" value="Save">
+                 </form>
+              </div>  
+              {% endif %}                    
+            </tbody>
+          </table>
+        </article>  
+      </main>
+      <!-- Main -->
+{% include 'footer.html' %}

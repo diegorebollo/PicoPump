@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PicoPump</title>
+    <link rel="stylesheet" href="https://static.drebollo.dev/PicoPump/css/pico.min.css" />
+    <link rel="stylesheet" href="https://static.drebollo.dev/PicoPump/css/custom.css" />
+  </head>
+  <body>
+    <!-- Nav -->
+    <nav class="container-fluid">
+      <ul>
+        <li>
+          <a href="/" class="contrast"><strong>PicoPump Web Tool</strong></a>
+        </li>
+      </ul>
+      <ul>
+        {% if (session_status) is None %}    
+        <li><a class="secondary" href="/login">Login</a></li>              
+        {% else %}
+        <li><a class="secondary" href="/logout">Logout</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+    <!-- Nav -->

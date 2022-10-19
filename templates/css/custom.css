@@ -59,3 +59,25 @@ a {
 .form h1{
   margin-bottom: 2rem;
 }
+
+.squash{
+  padding-top: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 12.5rem;
+  text-align: center;
+}
+
+.squash form{
+  margin-bottom: 0;
+}
+
+.squash p, select, label, input{
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+article .error{
+  text-align: center;
+
+}
