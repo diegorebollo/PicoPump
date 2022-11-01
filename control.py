@@ -11,7 +11,6 @@ THRESHOLD = None
 RELAY_STATUS = None
 MAIN_FUNC_WORKING = True
 OVERRIDE = False
-OVERRIDE_ACTION = None
 VAR_FILE = 'variables.json'
 
 
@@ -40,13 +39,6 @@ def relay_off():
     return "Relay Off"
 
 
-def force_relay_off():
-    global OVERRIDE, OVERRIDE_ACTION
-
-    OVERRIDE_ACTION = 'OFF'
-    OVERRIDE = 'True'
-
-
 def relay_on():
     global RELAY_STATUS
 
@@ -57,32 +49,28 @@ def relay_on():
 
 
 def force_relay_on():
-    global OVERRIDE, OVERRIDE_ACTION
+    global OVERRIDE
 
-    OVERRIDE_ACTION = 'ON'
     OVERRIDE = 'True'
 
 
 def main():
     global OVERRIDE
 
-    print('main func working')
+    #print('main func working')
+    # Turn On Status LED
+    Pin(3, Pin.OUT, value=1)
     while MAIN_FUNC_WORKING:
         if not OVERRIDE:
             update_vars()
             relay_off()
-            print(water_sensor_readout())
-            if water_sensor_readout() < THRESHOLD:
+            # print(water_sensor_readout())
+            if water_sensor_readout() < THRESHOLD and water_sensor_readout() > 15000:
                 relay_on()
                 utime.sleep(SECONDS_PUMPING)
             else:
                 utime.sleep(SECONDS_READOUT)
         else:
-            if OVERRIDE_ACTION == 'ON':
-                relay_on()
-            elif OVERRIDE_ACTION == 'OFF':
-                relay_off()
-            else:
-                pass
+            relay_on()
             utime.sleep(SECONDS_PUMPING)
             OVERRIDE = False

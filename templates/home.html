@@ -1,4 +1,4 @@
-{% args vars_file, session_status, water_sensor_readout, last_run_date, threshold, realy_status %}
+{% args vars_file, session_status, water_sensor_readout, last_run_date, threshold, realy_status, date %}
 {% include 'header.html' %}   
    <!-- Main -->
     <main class="container main-container">
@@ -35,6 +35,14 @@
                 </td>
                 <td>
                   <a href="/relayoff" class="btn">Relay OFF</a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Date:              
+                </td>
+                <td>
+                  {{ date }}
                 </td>
               </tr>
               <tr>
