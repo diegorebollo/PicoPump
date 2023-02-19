@@ -9,6 +9,7 @@ def render(vars_file, session_status, water_sensor_readout, last_run_date, thres
     <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
     <title>PicoPump</title>
+    <link rel=\"icon\" type=\"image/x-icon\" href=\"https://static.drebollo.dev/PicoPump/favicon.ico\" />
     <link rel=\"stylesheet\" href=\"https://static.drebollo.dev/PicoPump/css/pico.min.css\" />
     <link rel=\"stylesheet\" href=\"https://static.drebollo.dev/PicoPump/css/custom.css\" />
   </head>
@@ -165,13 +166,11 @@ def render(vars_file, session_status, water_sensor_readout, last_run_date, thres
     def render2(*a, **d):
         yield """    <!-- Footer -->
     <footer class=\"container-fluid\">
-        <small
-          >© 2022
-          <a href=\"https://drebollo.dev\" class=\"secondary\"
-            >Diego Rebollo</a
-          ></small
+      <small
         >
-      </footer>
+        <a href=\"https://drebollo.dev\" class=\"secondary\">drebollo.dev</a></small
+      >
+    </footer>
       <!-- ./ Footer -->
     </body>
   </html>

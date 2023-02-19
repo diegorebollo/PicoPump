@@ -1,31 +1,35 @@
-from machine import ADC, Pin
 from file_manager import save_date, read_file
-import utime
-
+from machine import ADC, Pin, reset
+import micropython
+import uasyncio
+import time
 
 SENSOR = None
 RELAY = None
 SECONDS_PUMPING = None
 SECONDS_READOUT = None
-THRESHOLD = None
+SENSOR_THRESHOLD = None
 RELAY_STATUS = None
 MAIN_FUNC_WORKING = True
 OVERRIDE = False
+SAFETY_REBOOT = True
+SAFETY_REBOOT_TIME = 24 # hours
 VAR_FILE = 'variables.json'
 
 
-def update_vars():
-    global SENSOR, RELAY, SECONDS_PUMPING, SECONDS_READOUT, THRESHOLD
-    vars_file = read_file(VAR_FILE)
+async def update_vars():
+    global SENSOR, RELAY, SECONDS_PUMPING, SECONDS_READOUT, SENSOR_THRESHOLD
 
-    SENSOR = ADC(vars_file['sensor_pin'])
-    RELAY = Pin(vars_file['relay_pin'], Pin.OUT)
-    SECONDS_PUMPING = vars_file['seconds_pumping']
-    SECONDS_READOUT = vars_file['seconds_readout']
-    THRESHOLD = vars_file['threshold']
+    vars = read_file(VAR_FILE)
+
+    SENSOR = ADC(vars['sensor_pin'])
+    RELAY = Pin(vars['relay_pin'], Pin.OUT)
+    SECONDS_PUMPING = vars['seconds_pumping']
+    SECONDS_READOUT = vars['seconds_readout']
+    SENSOR_THRESHOLD = vars['threshold']
 
 
-def water_sensor_readout():
+def sensor_readout():
 
     sensor_read = SENSOR.read_u16()
     return sensor_read
@@ -36,7 +40,7 @@ def relay_off():
 
     RELAY.value(0)
     RELAY_STATUS = False
-    return "Relay Off"
+    return 'Relay Off'
 
 
 def relay_on():
@@ -52,25 +56,61 @@ def force_relay_on():
     global OVERRIDE
 
     OVERRIDE = 'True'
+    
 
+class LedStatus():
+    def __init__(self):
+        self.led = Pin("LED", Pin.OUT)
+    
+    def on(self):
+        self.led.on()
+        
+    def turn_on(self, n):
+        self.led.on()
+        time.sleep(n)     
+        self.led.off()
+        
+        
+async def reboot():
+    if SAFETY_REBOOT:
+        await uasyncio.sleep_ms(SAFETY_REBOOT_TIME * 60 * 60 * 1000)
 
-def main():
+        if not RELAY_STATUS:
+            print('rebooting')
+            reset()
+        else:
+            await uasyncio.sleep_ms(SECONDS_PUMPING * 1000)
+            print('rebooting')
+            reset()
+            
+
+async def main():
     global OVERRIDE
-
-    #print('main func working')
+    
+    print('control func working')
+    uasyncio.create_task(update_vars())
+    await uasyncio.sleep_ms(2000) # needed for update_vars
+    
     # Turn On Status LED
-    Pin(3, Pin.OUT, value=1)
+    led = LedStatus()
+    led.turn_on(3)
+    
+    # Safety Reboot
+    uasyncio.create_task(reboot())    
+        
     while MAIN_FUNC_WORKING:
         if not OVERRIDE:
-            update_vars()
             relay_off()
-            # print(water_sensor_readout())
-            if water_sensor_readout() < THRESHOLD and water_sensor_readout() > 15000:
+            led.turn_on(1)
+            print(sensor_readout())
+            if sensor_readout() < SENSOR_THRESHOLD and sensor_readout() > 15000:
+                led.on()
                 relay_on()
-                utime.sleep(SECONDS_PUMPING)
+                await uasyncio.sleep_ms(SECONDS_PUMPING * 1000)
             else:
-                utime.sleep(SECONDS_READOUT)
+                await uasyncio.sleep_ms(SECONDS_READOUT * 1000)
         else:
             relay_on()
-            utime.sleep(SECONDS_PUMPING)
+            await uasyncio.sleep_ms(SECONDS_PUMPING * 1000)
             OVERRIDE = False
+

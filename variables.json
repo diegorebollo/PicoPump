@@ -1,1 +1,1 @@
-{"sensor_pin": 26, "seconds_pumping": 360, "threshold": 22000, "relay_pin": 7, "seconds_readout": 30}
+{"sensor_pin": 26, "seconds_pumping": 600, "threshold": 25000, "relay_pin": 7, "seconds_readout": 30}
